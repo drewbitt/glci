@@ -33,6 +33,7 @@ const {
   GLOBAL_DEFAULT_KEY,
   DEFAULT_STAGES,
 } = require("./src/constants");
+const cacheHelper = require("./src/cache");
 
 // ----- globals -----
 
@@ -412,19 +413,8 @@ async function main() {
 
       // copying needed cache files in temp project files directory (pull cache)
       if (cache.policy !== "push") {
-        for (const file of cache.paths) {
-          const fileAbs = path.join(GLCI_CACHE_DIR, file);
-
-          if (fs.existsSync(fileAbs)) {
-            mkdirpRecSync(
-              path.join(PROJECT_FILES_TEMP_DIR, path.dirname(file))
-            );
-
-            fs.copySync(fileAbs, path.join(PROJECT_FILES_TEMP_DIR, file), {
-              recursive: true,
-            });
-          }
-        }
+        const cacheFile = path.join(GLCI_CACHE_DIR, "default.tar");
+        await cacheHelper.extract(PROJECT_FILES_TEMP_DIR, cache.paths, cacheFile);
       }
 
       // take only dependencies artifacts if exists else every artifact generated before
@@ -511,17 +501,7 @@ async function main() {
 
         // updating cache directory (if policy asks) after job ended
         if (cache.policy !== "pull") {
-          const copyFiles = (files) => {
-            for (const file of files) {
-              const fileAbs = path.join(PROJECT_FILES_TEMP_DIR, file);
-              const targetAbs = path.join(GLCI_CACHE_DIR, file);
-
-              if (fs.existsSync(fileAbs)) {
-                mkdirpRecSync(path.dirname(targetAbs));
-                fs.copySync(fileAbs, targetAbs, { recursive: true });
-              }
-            }
-          };
+          const cacheFiles = [];
 
           if (cache.untracked === true) {
             const untracked = readdirRecSync(
@@ -531,10 +511,15 @@ async function main() {
               projectFiles
             ).filter((file) => !projectFiles.includes(file));
 
-            copyFiles(untracked);
+            cacheFiles.push(...untracked);
           }
 
-          copyFiles(cache.paths);
+          cacheFiles.push(...cache.paths);
+
+          const cacheFile = path.join(GLCI_CACHE_DIR, "default.tar");
+
+          mkdirpRecSync(path.dirname(cacheFile));
+          await cacheHelper.update(PROJECT_FILES_TEMP_DIR, cacheFiles, cacheFile);
         }
 
         // updating artifacts directory after job ended
