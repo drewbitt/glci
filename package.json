@@ -1,5 +1,5 @@
 {
-  "name": "glci",
+  "name": "@jc-lab/glci",
   "description": "Ease GitLab CI Pipelines set-up by running your jobs locally in Docker containers.",
   "main": "./index.js",
   "bin": {
@@ -19,7 +19,7 @@
   "homepage": "https://github.com/mdubourg001/glci",
   "repository": {
     "type": "git",
-    "url": "https://github.com/mdubourg001/glci"
+    "url": "https://github.com/joseph-jclab/glci"
   },
   "license": "MIT",
   "author": {
@@ -57,5 +57,5 @@
     "prepublish": "yarn build",
     "test": "jest"
   },
-  "version": "0.4.4"
+  "version": "0.4.5-rc5"
 }

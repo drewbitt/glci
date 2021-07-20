@@ -1,3 +1,9 @@
+# @jc-lab/glci
+
+## This package contains experimental features and fixes for unfixed bugs in origin.
+
+See [https://github.com/mdubourg001/glci/pulls?q=is%3Apr+author%3Ajc-lab+](https://github.com/mdubourg001/glci/pulls?q=is%3Apr+author%3Ajc-lab+)
+
 # glci 🦊
 
 Ease GitLab CI Pipelines set-up by running your jobs locally in Docker containers.
@@ -9,7 +15,7 @@ Why ? Because I did not want to commit, push, and wait for my jobs to run on the
 ## Installation
 
 ```bash
-yarn global add glci
+yarn global add @jc-lab/glci
 ```
 
 ## Usage
